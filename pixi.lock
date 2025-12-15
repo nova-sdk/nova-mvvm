@@ -1539,8 +1539,8 @@ packages:
   requires_python: '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*'
 - pypi: ./
   name: nova-mvvm
-  version: 0.12.0
-  sha256: 5470c2b7dd4dd030a207737627764b66a653113080b5671f6bedf61e07b6af73
+  version: 0.13.0
+  sha256: a568681227bc0cda61375916a0a81fbf61577765d4374dc0436a05f0de81c3f3
   requires_dist:
   - trame
   - deepdiff

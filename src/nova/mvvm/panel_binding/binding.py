@@ -106,9 +106,7 @@ class Communicator:
                                 param_connector,
                             )
                         else:
-                            raise Exception(
-                                f"Cannot create observer for key: " f"{key} and parameter {param_connector}"
-                            )
+                            raise Exception(f"Cannot create observer for key: {key} and parameter {param_connector}")
                     except Exception:
                         raise Exception("Cannot connect", key) from None
         return None

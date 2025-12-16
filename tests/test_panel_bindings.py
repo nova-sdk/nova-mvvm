@@ -2,10 +2,17 @@
 
 import panel as pn
 import pytest
+from typing_extensions import Generator
 
 from nova.mvvm import bindings_map
 from nova.mvvm.panel_binding import PanelBinding, WidgetConnection
 from tests.model import User
+
+
+@pytest.fixture(scope="function", autouse=True)
+def function_scoped_fixture() -> Generator[str, None]:
+    yield "function"
+    bindings_map.clear()
 
 
 class App(pn.viewable.Viewer):
@@ -15,7 +22,6 @@ class App(pn.viewable.Viewer):
         super().__init__()
         self.username = pn.widgets.TextInput(name="Name", value="name")
         self._view = pn.Column(self.username)
-        bindings_map.clear()
 
     def __panel__(self) -> pn.Column:
         """Overrides __panel__ method to return the view."""

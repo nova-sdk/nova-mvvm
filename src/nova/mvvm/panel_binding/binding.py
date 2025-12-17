@@ -1,10 +1,11 @@
 """Binding module for the Panel framework."""
 
 import inspect
-from typing import Any, Callable, List, Optional, Union, cast, override
+from typing import Any, Callable, List, Optional, Union, cast
 
 import param
 from pydantic import BaseModel, ValidationError
+from typing_extensions import override
 
 from .. import bindings_map
 from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields

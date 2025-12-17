@@ -1,3 +1,3 @@
-from .binding import PanelBinding
+from .binding import PanelBinding, WidgetConnection
 
-__all__ = ["PanelBinding"]
+__all__ = ["PanelBinding", "WidgetConnection"]

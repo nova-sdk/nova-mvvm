@@ -1,6 +1,6 @@
 [project]
 name = "nova-mvvm"
-version = "0.12.0"
+version = "0.13.0"
 description = "A Python Package for Model-View-ViewModel pattern"
 authors = [{ name = "Yakubov, Sergey", email = "yakubovs@ornl.gov" }]
 readme = "README.md"
@@ -40,7 +40,7 @@ mypy = "*"
 pre-commit = "*"
 coverage = "*"
 pytest = "*"
-ruff = "*"
+ruff = "==0.14.4"
 copier="*"
 sphinx = "*"
 sphinx-rtd-theme = "*"

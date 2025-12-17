@@ -17,7 +17,7 @@ from nova.mvvm.pyqt6_binding.pyqt6_worker import PyQt6Worker
 from .model import User
 
 
-@pytest.fixture(scope="function")  # Default scope
+@pytest.fixture(scope="function", autouse=True)
 def function_scoped_fixture() -> Generator[str, None]:
     yield "function"
     bindings_map.clear()
@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
 
-def test_binding_model_to_pyqt(qtbot: QtBot, function_scoped_fixture: str) -> None:
+def test_binding_model_to_pyqt(qtbot: QtBot) -> None:
     # Creates pyqt binding for a Pydantic object, updates model and validates that the PyQt element was updated.
 
     test_object = User()
@@ -93,9 +93,7 @@ test_cases: List[Dict[str, Any]] = [
     [(case["input"], case["result"]) for case in test_cases],
     ids=[case["test_name"] for case in test_cases],
 )
-def test_binding_pyqt_to_model(
-    qtbot: QtBot, input: str, expected_result: Dict[str, Any], function_scoped_fixture: str
-) -> None:
+def test_binding_pyqt_to_model(qtbot: QtBot, input: str, expected_result: Dict[str, Any]) -> None:
     # Creates pyqt binding for a Pydantic object, updates user interface state and validates that the model was updated
     # or validation error occurred.
     after_update_results = {}
@@ -117,7 +115,7 @@ def test_binding_pyqt_to_model(
     assert test_object.username == expected_result["value"]
 
 
-def test_pyqt_binding_same_name(function_scoped_fixture: str) -> None:
+def test_pyqt_binding_same_name() -> None:
     # Creates pyqt binding for with same name, expect error
     test_object = User()
     test_object2 = User()
@@ -129,7 +127,7 @@ def test_pyqt_binding_same_name(function_scoped_fixture: str) -> None:
         binding2.connect("test_object", lambda: print("hello"))
 
 
-def test_binding_same_object(function_scoped_fixture: str) -> None:
+def test_binding_same_object() -> None:
     # Creates pyqt binding for the same Pydantic object twice, expect error
     test_object = User()
 
@@ -155,7 +153,7 @@ def save_progress(_message: str, value: float) -> None:
     progress_value = value
 
 
-def test_pyqt_worker(qtbot: QtBot, function_scoped_fixture: str) -> None:
+def test_pyqt_worker(qtbot: QtBot) -> None:
     worker = PyQt6Binding().new_worker(task)
     pyqt_worker = cast(PyQt6Worker, worker)
 

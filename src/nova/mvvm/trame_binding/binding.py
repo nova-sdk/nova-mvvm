@@ -142,6 +142,7 @@ class StateConnection:
     """Connection that uses a state variable."""
 
     def __init__(self, communicator: TrameCommunicator, state_variable_name: Optional[str]) -> None:
+        self.has_errors = False
         self.state_variable_name = state_variable_name
         self.communicator = communicator
         self.state = communicator.state
@@ -226,6 +227,7 @@ class StateConnection:
                             errors = get_errored_fields_from_validation_error(e)
                             error = e
                             updated = True
+                            self.has_errors = True
                     elif isinstance(self.viewmodel_linked_object, dict):
                         self.viewmodel_linked_object.update(kwargs[state_variable_name])
                         updates.append(state_variable_name)
@@ -234,6 +236,9 @@ class StateConnection:
                         updates.append(state_variable_name)
                     else:
                         raise Exception("cannot update", self.viewmodel_linked_object)
+                    if self.has_errors and not errors:
+                        updated = True
+                        self.has_errors = False
                     if updated:
                         await self._handle_callback({"updated": updates, "errored": errors, "error": error})
 

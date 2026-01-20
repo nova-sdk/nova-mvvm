@@ -9,7 +9,7 @@ from typing_extensions import override
 
 from .. import bindings_map
 from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields
-from .._internal.utils import check_binding, rgetattr, rsetattr
+from .._internal.utils import check_binding, check_model_type, rgetattr, rsetattr
 from ..interface import BindingInterface, ConnectCallbackType, Worker
 
 
@@ -113,7 +113,9 @@ class Communicator:
         return None
 
     # Update the view based on the provided value
-    def update_in_view(self, value: Any) -> None:
+    def update_in_view(self, value: Any, ignore_type: bool = False) -> None:
+        if issubclass(type(value), BaseModel) and not ignore_type:
+            check_model_type(self.viewmodel_linked_object, value, 4)
         if is_callable(self.connector):
             cast(Callable, self.connector)(value)
         elif self.viewmodel_linked_object:

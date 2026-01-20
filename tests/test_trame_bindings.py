@@ -14,7 +14,7 @@ from nova.mvvm._internal.utils import rgetattr, rsetdictvalue
 from nova.mvvm.trame_binding import TrameBinding
 from nova.mvvm.trame_binding.trame_worker import ProgressCallback
 
-from .model import User
+from .model import Range, User
 
 
 @pytest_asyncio.fixture(scope="function", autouse=True)  # Default scope
@@ -164,6 +164,23 @@ async def test_binding_same_object(server: Server) -> None:
     binding.connect("test_object")
     with pytest.raises(ValueError):
         binding.connect("test_object1")
+
+
+@pytest.mark.asyncio
+@pytest.mark.filterwarnings("error::UserWarning")
+async def test_binding_incorrect_value(server: Server) -> None:
+    test_range = Range()
+    test_user = User()
+
+    binding = TrameBinding(server.state).new_bind(test_range)
+    binding.connect("test_range")
+    with pytest.warns(UserWarning, match="update_in_view"):
+        binding.update_in_view(test_user)
+    binding.update_in_view(test_user, ignore_type=True)
+
+    binding2 = TrameBinding(server.state).new_bind()
+    binding2.connect("test_empty")
+    binding2.update_in_view(test_user)
 
 
 res = 0

@@ -93,7 +93,7 @@ class Communicator(ABC):
         raise Exception("Please implement in a concrete class")
 
     @abstractmethod
-    def update_in_view(self, value: Any) -> None:
+    def update_in_view(self, value: Any, ignore_type: bool = False) -> None:
         """
         Update UI component(s) with the provided value.
 
@@ -101,6 +101,9 @@ class Communicator(ABC):
         ----------
         value : Any
             The new value to be reflected in the view.
+        ignore_type : bool
+            If true, then passing a value that does not match the linked object will raise a warning. If no linked
+            object is set, then this field is ignored and type checking is not performed.
 
         Returns
         -------

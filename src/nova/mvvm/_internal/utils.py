@@ -1,7 +1,9 @@
 """Internal common functions tp be used within the package."""
 
 import re
+from types import NoneType
 from typing import Any, Dict
+from warnings import warn
 
 from nova.mvvm import bindings_map
 from nova.mvvm.interface import LinkedObjectType
@@ -98,3 +100,21 @@ def check_binding(linked_object: LinkedObjectType, name: str) -> None:
     for communicator in bindings_map.values():
         if communicator.viewmodel_linked_object and communicator.viewmodel_linked_object is linked_object:
             raise ValueError(f"cannot connect to binding {name}: object already connected")
+
+
+def check_model_type(old_value: Any, new_value: Any, stacklevel: int) -> None:
+    old_type = type(old_value)
+    new_type = type(new_value)
+    if old_type is not NoneType and old_type is not new_type:
+        print_type_warning(old_type, new_type, stacklevel=stacklevel)
+
+
+def print_type_warning(old_type: Any, new_type: Any, stacklevel: int) -> None:
+    warn(
+        (
+            f"update_in_view expected a value of type '{old_type}', received '{new_type}'. This is likely "
+            "a bug in your code. If not, you can disable this type check by passing ignore_type=True to "
+            "update_in_view."
+        ),
+        stacklevel=stacklevel,
+    )

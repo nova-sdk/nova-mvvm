@@ -10,7 +10,14 @@ from trame_server.state import State
 from typing_extensions import override
 
 from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields
-from .._internal.utils import check_binding, normalize_field_name, rget_list_of_fields, rgetattr, rsetattr
+from .._internal.utils import (
+    check_binding,
+    check_model_type,
+    normalize_field_name,
+    rget_list_of_fields,
+    rgetattr,
+    rsetattr,
+)
 from ..bindings_map import bindings_map
 from ..interface import (
     BindingInterface,
@@ -84,12 +91,12 @@ class TrameCommunicator(Communicator):
         return new_connection.get_callback()
 
     @override
-    def update_in_view(self, value: Any) -> None:
+    def update_in_view(self, value: Any, ignore_type: bool = False) -> None:
         if not self.connections:
             raise ValueError("You must call connect on this binding before calling update_in_view.")
 
         for connection in self.connections:
-            connection.update_in_view(value)
+            connection.update_in_view(value, ignore_type)
 
 
 class CallBackConnection:
@@ -131,7 +138,9 @@ class CallBackConnection:
         if self.viewmodel_callback_after_update:
             self.viewmodel_callback_after_update({"updated": updates, "errored": errors, "error": None})
 
-    def update_in_view(self, value: Any) -> None:
+    def update_in_view(self, value: Any, ignore_type: bool) -> None:
+        if issubclass(type(value), BaseModel) and not ignore_type:
+            check_model_type(self.viewmodel_linked_object, value, 5)
         self.callback(value)
 
     def get_callback(self) -> ConnectCallbackType:
@@ -183,6 +192,7 @@ class StateConnection:
 
     def _connect(self) -> None:
         state_variable_name = self.state_variable_name
+        self._set_variable_in_state(f"{state_variable_name}_errors", [])
         # we need to make sure state variable exists on connect since if it does not - Trame will not monitor it
         if state_variable_name:
             if self.viewmodel_linked_object:
@@ -225,6 +235,7 @@ class StateConnection:
                                 updated = False
                         except ValidationError as e:
                             errors = get_errored_fields_from_validation_error(e)
+                            self._set_variable_in_state(f"{state_variable_name}_errors", errors)
                             error = e
                             updated = True
                             self.has_errors = True
@@ -239,11 +250,14 @@ class StateConnection:
                     if self.has_errors and not errors:
                         updated = True
                         self.has_errors = False
+                        self._set_variable_in_state(f"{state_variable_name}_errors", [])
                     if updated:
                         await self._handle_callback({"updated": updates, "errored": errors, "error": error})
 
-    def update_in_view(self, value: Any) -> None:
+    def update_in_view(self, value: Any, ignore_type: bool) -> None:
         if issubclass(type(value), BaseModel):
+            if not ignore_type:
+                check_model_type(self.viewmodel_linked_object, value, 5)
             value = value.model_dump()
         if self.linked_object_attributes:
             for attribute_name in self.linked_object_attributes:

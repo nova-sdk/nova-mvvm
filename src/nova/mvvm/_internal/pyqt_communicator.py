@@ -7,7 +7,7 @@ from pydantic import BaseModel, ValidationError
 from typing_extensions import override
 
 from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields
-from .._internal.utils import check_binding, rsetattr
+from .._internal.utils import check_binding, check_model_type, rsetattr
 from ..bindings_map import bindings_map
 from ..interface import Communicator, ConnectCallbackType
 
@@ -84,6 +84,8 @@ class PyQtCommunicator(Communicator):
             return None
 
     @override
-    def update_in_view(self, value: Any) -> Any:
+    def update_in_view(self, value: Any, ignore_type: bool = False) -> None:
         """Update a View (GUI) when called by a ViewModel."""
+        if issubclass(type(value), BaseModel) and not ignore_type:
+            check_model_type(self.viewmodel_linked_object, value, 4)
         return self.pyqtobject.signal.emit(value)

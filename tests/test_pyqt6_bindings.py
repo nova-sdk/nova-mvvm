@@ -14,7 +14,7 @@ from nova.mvvm.pydantic_utils import get_field_info
 from nova.mvvm.pyqt6_binding import PyQt6Binding
 from nova.mvvm.pyqt6_binding.pyqt6_worker import PyQt6Worker
 
-from .model import User
+from .model import Range, User
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -135,6 +135,20 @@ def test_binding_same_object() -> None:
     binding.connect("test_object", lambda: print("hello"))
     with pytest.raises(ValueError):
         binding.connect("test_object1", lambda: print("hello"))
+
+
+def test_binding_incorrect_value() -> None:
+    test_range = Range()
+    test_user = User()
+
+    binding = PyQt6Binding().new_bind(test_range)
+    binding.connect("test_range", lambda: print("hello"))
+    with pytest.raises(TypeError):
+        binding.update_in_view(test_user)
+
+    binding2 = PyQt6Binding().new_bind()
+    binding2.connect("test_empty", lambda: print("hello"))
+    binding2.update_in_view(test_user)
 
 
 res = 0

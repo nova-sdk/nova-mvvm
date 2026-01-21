@@ -1,6 +1,7 @@
 """Internal common functions tp be used within the package."""
 
 import re
+from types import NoneType
 from typing import Any, Dict
 
 from nova.mvvm import bindings_map
@@ -98,3 +99,10 @@ def check_binding(linked_object: LinkedObjectType, name: str) -> None:
     for communicator in bindings_map.values():
         if communicator.viewmodel_linked_object and communicator.viewmodel_linked_object is linked_object:
             raise ValueError(f"cannot connect to binding {name}: object already connected")
+
+
+def check_model_type(old_value: Any, new_value: Any) -> None:
+    old_type = type(old_value)
+    new_type = type(new_value)
+    if old_type is not NoneType and old_type is not new_type:
+        raise TypeError(f"update_in_view expected a value of type '{old_type}' but received '{new_type}'.")

@@ -10,7 +10,14 @@ from trame_server.state import State
 from typing_extensions import override
 
 from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields
-from .._internal.utils import check_binding, normalize_field_name, rget_list_of_fields, rgetattr, rsetattr
+from .._internal.utils import (
+    check_binding,
+    check_model_type,
+    normalize_field_name,
+    rget_list_of_fields,
+    rgetattr,
+    rsetattr,
+)
 from ..bindings_map import bindings_map
 from ..interface import (
     BindingInterface,
@@ -132,6 +139,8 @@ class CallBackConnection:
             self.viewmodel_callback_after_update({"updated": updates, "errored": errors, "error": None})
 
     def update_in_view(self, value: Any) -> None:
+        if issubclass(type(value), BaseModel):
+            check_model_type(self.viewmodel_linked_object, value)
         self.callback(value)
 
     def get_callback(self) -> ConnectCallbackType:
@@ -244,6 +253,7 @@ class StateConnection:
 
     def update_in_view(self, value: Any) -> None:
         if issubclass(type(value), BaseModel):
+            check_model_type(self.viewmodel_linked_object, value)
             value = value.model_dump()
         if self.linked_object_attributes:
             for attribute_name in self.linked_object_attributes:

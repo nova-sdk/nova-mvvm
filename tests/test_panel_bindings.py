@@ -6,7 +6,7 @@ from typing_extensions import Generator
 
 from nova.mvvm import bindings_map
 from nova.mvvm.panel_binding import PanelBinding, WidgetConnection
-from tests.model import User
+from tests.model import Range, User
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -72,3 +72,19 @@ def test_panel_binding_same_name(app: App) -> None:
     binding.connect("config", connections)
     with pytest.raises(ValueError):
         binding2.connect("config", connections)
+
+
+def test_binding_incorrect_value(app: App) -> None:
+    test_range = Range()
+    test_user = User()
+
+    binding = PanelBinding().new_bind(test_user)
+    binding2 = PanelBinding().new_bind()
+    connections = [WidgetConnection("username", app.username, "value")]
+
+    binding.connect("test_user", connections)
+    with pytest.raises(TypeError):
+        binding.update_in_view(test_range)
+
+    binding2.connect("test_empty", connections)
+    binding2.update_in_view(test_user)

@@ -140,7 +140,7 @@ class CallBackConnection:
 
     def update_in_view(self, value: Any) -> None:
         if issubclass(type(value), BaseModel):
-            check_model_type(self.viewmodel_linked_object, value, 5)
+            check_model_type(self.viewmodel_linked_object, value)
         self.callback(value)
 
     def get_callback(self) -> ConnectCallbackType:
@@ -253,7 +253,7 @@ class StateConnection:
 
     def update_in_view(self, value: Any) -> None:
         if issubclass(type(value), BaseModel):
-            check_model_type(self.viewmodel_linked_object, value, 5)
+            check_model_type(self.viewmodel_linked_object, value)
             value = value.model_dump()
         if self.linked_object_attributes:
             for attribute_name in self.linked_object_attributes:

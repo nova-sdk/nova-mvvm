@@ -87,5 +87,5 @@ class PyQtCommunicator(Communicator):
     def update_in_view(self, value: Any) -> None:
         """Update a View (GUI) when called by a ViewModel."""
         if issubclass(type(value), BaseModel):
-            check_model_type(self.viewmodel_linked_object, value, 4)
+            check_model_type(self.viewmodel_linked_object, value)
         return self.pyqtobject.signal.emit(value)

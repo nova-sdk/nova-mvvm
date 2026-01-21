@@ -137,14 +137,13 @@ def test_binding_same_object() -> None:
         binding.connect("test_object1", lambda: print("hello"))
 
 
-@pytest.mark.filterwarnings("error::UserWarning")
 def test_binding_incorrect_value() -> None:
     test_range = Range()
     test_user = User()
 
     binding = PyQt6Binding().new_bind(test_range)
     binding.connect("test_range", lambda: print("hello"))
-    with pytest.warns(UserWarning, match="update_in_view"):
+    with pytest.raises(TypeError):
         binding.update_in_view(test_user)
 
     binding2 = PyQt6Binding().new_bind()

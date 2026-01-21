@@ -167,14 +167,13 @@ async def test_binding_same_object(server: Server) -> None:
 
 
 @pytest.mark.asyncio
-@pytest.mark.filterwarnings("error::UserWarning")
 async def test_binding_incorrect_value(server: Server) -> None:
     test_range = Range()
     test_user = User()
 
     binding = TrameBinding(server.state).new_bind(test_range)
     binding.connect("test_range")
-    with pytest.warns(UserWarning, match="update_in_view"):
+    with pytest.raises(TypeError):
         binding.update_in_view(test_user)
 
     binding2 = TrameBinding(server.state).new_bind()

@@ -115,7 +115,7 @@ class Communicator:
     # Update the view based on the provided value
     def update_in_view(self, value: Any) -> None:
         if issubclass(type(value), BaseModel):
-            check_model_type(self.viewmodel_linked_object, value, 4)
+            check_model_type(self.viewmodel_linked_object, value)
         if is_callable(self.connector):
             cast(Callable, self.connector)(value)
         elif self.viewmodel_linked_object:

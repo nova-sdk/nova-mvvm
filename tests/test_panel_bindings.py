@@ -74,7 +74,6 @@ def test_panel_binding_same_name(app: App) -> None:
         binding2.connect("config", connections)
 
 
-@pytest.mark.filterwarnings("error::UserWarning")
 def test_binding_incorrect_value(app: App) -> None:
     test_range = Range()
     test_user = User()
@@ -84,7 +83,7 @@ def test_binding_incorrect_value(app: App) -> None:
     connections = [WidgetConnection("username", app.username, "value")]
 
     binding.connect("test_user", connections)
-    with pytest.warns(UserWarning, match="update_in_view"):
+    with pytest.raises(TypeError):
         binding.update_in_view(test_range)
 
     binding2.connect("test_empty", connections)

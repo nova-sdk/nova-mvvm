@@ -146,7 +146,6 @@ def test_binding_incorrect_value() -> None:
     binding.connect("test_range", lambda: print("hello"))
     with pytest.warns(UserWarning, match="update_in_view"):
         binding.update_in_view(test_user)
-    binding.update_in_view(test_user, ignore_type=True)
 
     binding2 = PyQt6Binding().new_bind()
     binding2.connect("test_empty", lambda: print("hello"))

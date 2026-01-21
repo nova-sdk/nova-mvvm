@@ -91,12 +91,12 @@ class TrameCommunicator(Communicator):
         return new_connection.get_callback()
 
     @override
-    def update_in_view(self, value: Any, ignore_type: bool = False) -> None:
+    def update_in_view(self, value: Any) -> None:
         if not self.connections:
             raise ValueError("You must call connect on this binding before calling update_in_view.")
 
         for connection in self.connections:
-            connection.update_in_view(value, ignore_type)
+            connection.update_in_view(value)
 
 
 class CallBackConnection:
@@ -138,8 +138,8 @@ class CallBackConnection:
         if self.viewmodel_callback_after_update:
             self.viewmodel_callback_after_update({"updated": updates, "errored": errors, "error": None})
 
-    def update_in_view(self, value: Any, ignore_type: bool) -> None:
-        if issubclass(type(value), BaseModel) and not ignore_type:
+    def update_in_view(self, value: Any) -> None:
+        if issubclass(type(value), BaseModel):
             check_model_type(self.viewmodel_linked_object, value, 5)
         self.callback(value)
 
@@ -251,10 +251,9 @@ class StateConnection:
                     if updated:
                         await self._handle_callback({"updated": updates, "errored": errors, "error": error})
 
-    def update_in_view(self, value: Any, ignore_type: bool) -> None:
+    def update_in_view(self, value: Any) -> None:
         if issubclass(type(value), BaseModel):
-            if not ignore_type:
-                check_model_type(self.viewmodel_linked_object, value, 5)
+            check_model_type(self.viewmodel_linked_object, value, 5)
             value = value.model_dump()
         if self.linked_object_attributes:
             for attribute_name in self.linked_object_attributes:

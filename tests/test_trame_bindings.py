@@ -176,7 +176,6 @@ async def test_binding_incorrect_value(server: Server) -> None:
     binding.connect("test_range")
     with pytest.warns(UserWarning, match="update_in_view"):
         binding.update_in_view(test_user)
-    binding.update_in_view(test_user, ignore_type=True)
 
     binding2 = TrameBinding(server.state).new_bind()
     binding2.connect("test_empty")

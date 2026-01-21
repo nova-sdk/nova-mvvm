@@ -113,8 +113,7 @@ def print_type_warning(old_type: Any, new_type: Any, stacklevel: int) -> None:
     warn(
         (
             f"update_in_view expected a value of type '{old_type}', received '{new_type}'. This is likely "
-            "a bug in your code. If not, you can disable this type check by passing ignore_type=True to "
-            "update_in_view."
+            "a bug in your code."
         ),
         stacklevel=stacklevel,
     )

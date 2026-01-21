@@ -86,7 +86,6 @@ def test_binding_incorrect_value(app: App) -> None:
     binding.connect("test_user", connections)
     with pytest.warns(UserWarning, match="update_in_view"):
         binding.update_in_view(test_range)
-    binding.update_in_view(test_range, ignore_type=True)
 
     binding2.connect("test_empty", connections)
     binding2.update_in_view(test_user)

@@ -83,6 +83,6 @@ def get_nested_pydantic_field(model: BaseModel, field_path: str) -> FieldInfo:
         if issubclass(type(getattr(current_model, field)), BaseModel):
             current_model = getattr(current_model, field)
         else:
-            return current_model.model_fields[field]
+            return current_model.__class__.model_fields[field]
 
     raise Exception(f"Cannot find field {field_path}")

@@ -2,7 +2,11 @@
 name = "nova-mvvm"
 version = "0.14.0"
 description = "A Python Package for Model-View-ViewModel pattern"
-authors = [{ name = "Yakubov, Sergey", email = "yakubovs@ornl.gov" }]
+authors = [
+    { name = "Sergey Yakubov", email = "yakubovs@ornl.gov" },
+    { name = "John Duggan", email = "dugganjw@ornl.gov" },
+    { name = "Greg Watson", email = "watsongr@ornl.gov" }
+]
 readme = "README.md"
 license = "MIT"
 keywords = ["MVVM", "python"]

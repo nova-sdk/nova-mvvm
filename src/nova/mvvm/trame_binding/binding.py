@@ -28,6 +28,7 @@ from ..interface import (
     LinkedObjectType,
     Worker,
 )
+from ..pydantic_utils import ERROR_FIELD_NAME
 from .trame_worker import TrameWorker
 
 
@@ -176,12 +177,21 @@ class StateConnection:
         return update
 
     def _set_variable_in_state(self, name_in_state: str, value: Any) -> None:
+        if "." in name_in_state:
+            base_name, name_in_state = name_in_state.split(".", maxsplit=1)
+            if self.state[base_name] is None:
+                self.state[base_name] = {}
+            state_obj = self.state[base_name]
+        else:
+            base_name = name_in_state
+            state_obj = self.state
+
         if is_async():
             with self.state:
-                self.state[name_in_state] = value
+                state_obj[name_in_state] = value
                 self.state.dirty(name_in_state)
         else:
-            self.state[name_in_state] = value
+            state_obj[name_in_state] = value
             self.state.dirty(name_in_state)
 
     def _get_name_in_state(self, attribute_name: str) -> str:
@@ -206,6 +216,9 @@ class StateConnection:
         for attribute_name in self.linked_object_attributes or []:
             name_in_state = self._get_name_in_state(attribute_name)
             self.state.setdefault(name_in_state, None)
+
+        # Set the initial error state.
+        self._set_variable_in_state(f"{state_variable_name}.{ERROR_FIELD_NAME}", [])
 
         # this updates ViewModel on state change
         if self.viewmodel_linked_object:
@@ -234,6 +247,7 @@ class StateConnection:
                                 updated = False
                         except ValidationError as e:
                             errors = get_errored_fields_from_validation_error(e)
+                            self._set_variable_in_state(f"{state_variable_name}.{ERROR_FIELD_NAME}", errors)
                             error = e
                             updated = True
                             self.has_errors = True
@@ -248,6 +262,7 @@ class StateConnection:
                     if self.has_errors and not errors:
                         updated = True
                         self.has_errors = False
+                        self._set_variable_in_state(f"{state_variable_name}.{ERROR_FIELD_NAME}", [])
                     if updated:
                         await self._handle_callback({"updated": updates, "errored": errors, "error": error})
 
@@ -260,8 +275,10 @@ class StateConnection:
                 name_in_state = self._get_name_in_state(attribute_name)
                 value_to_change = rgetattr(value, attribute_name)
                 self._set_variable_in_state(name_in_state, value_to_change)
+            self._set_variable_in_state(f"{name_in_state}.{ERROR_FIELD_NAME}", [])
         elif self.state_variable_name:
             self._set_variable_in_state(self.state_variable_name, value)
+            self._set_variable_in_state(f"{self.state_variable_name}.{ERROR_FIELD_NAME}", [])
 
     def get_callback(self) -> ConnectCallbackType:
         return None

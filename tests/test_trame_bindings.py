@@ -185,6 +185,14 @@ async def test_binding_incorrect_value(server: Server) -> None:
     assert server.state.test_range[ERROR_FIELD_NAME] == []
     assert server.state.test_empty[ERROR_FIELD_NAME] == []
 
+    # Verify that an error is added correctly on change
+    with server.state:
+        server.state.test_range["min_value"] = 11
+        server.state.dirty("test_range")
+        server.state.flush()
+    await asyncio.sleep(1)
+    assert len(server.state.test_range[ERROR_FIELD_NAME]) == 1
+
 
 res = 0
 progress_value: float = -1

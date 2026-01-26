@@ -17,7 +17,6 @@ from .._internal.utils import (
     rget_list_of_fields,
     rgetattr,
     rsetattr,
-    rsetdictvalue,
 )
 from ..bindings_map import bindings_map
 from ..interface import (
@@ -189,11 +188,11 @@ class StateConnection:
 
         if is_async():
             with self.state:
-                rsetdictvalue(state_obj, name_in_state, value)
-                self.state.dirty(base_name)
+                state_obj[name_in_state] = value
+                self.state.dirty(name_in_state)
         else:
-            rsetdictvalue(self.state, name_in_state, value)
-            self.state.dirty(base_name)
+            state_obj[name_in_state] = value
+            self.state.dirty(name_in_state)
 
     def _get_name_in_state(self, attribute_name: str) -> str:
         name_in_state = normalize_field_name(attribute_name)

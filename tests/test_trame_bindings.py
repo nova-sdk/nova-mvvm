@@ -10,6 +10,7 @@ from trame.app import get_server
 from trame_server import Server
 
 from nova.mvvm import bindings_map
+from nova.mvvm._internal.pydantic_utils import ERROR_FIELD_NAME
 from nova.mvvm._internal.utils import rgetattr, rsetdictvalue
 from nova.mvvm.trame_binding import TrameBinding
 from nova.mvvm.trame_binding.trame_worker import ProgressCallback
@@ -179,6 +180,10 @@ async def test_binding_incorrect_value(server: Server) -> None:
     binding2 = TrameBinding(server.state).new_bind()
     binding2.connect("test_empty")
     binding2.update_in_view(test_user)
+
+    # Verify that the Pydantic errors field is included in the state for both bindings.
+    assert server.state.test_range[ERROR_FIELD_NAME] == []
+    assert server.state.test_empty[ERROR_FIELD_NAME] == []
 
 
 res = 0

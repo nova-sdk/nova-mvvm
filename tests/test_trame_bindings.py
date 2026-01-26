@@ -193,6 +193,10 @@ async def test_binding_incorrect_value(server: Server) -> None:
     await asyncio.sleep(1)
     assert len(server.state.test_range[ERROR_FIELD_NAME]) == 1
 
+    binding3 = TrameBinding(server.state).new_bind([])
+    binding3.connect("test_non_pydantic")
+    binding3.update_in_view(["test"])
+
 
 res = 0
 progress_value: float = -1

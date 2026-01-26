@@ -186,6 +186,11 @@ class StateConnection:
             base_name = name_in_state
             state_obj = self.state
 
+        if not isinstance(state_obj, State) and not isinstance(state_obj, dict):
+            # TODO: it would be preferred to disallow non-Pydantic objects from use, but
+            # until that is complete we need to skip error tracking for them.
+            return
+
         if is_async():
             with self.state:
                 state_obj[name_in_state] = value

@@ -98,7 +98,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/12/27/fb8d7338b4d551900fa3e580acbe7a0cf655d940e164cb5c00ec31961094/orderly_set-5.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b7/b9/c538f279a4e237a006a2c98387d081e9eb060d203d8ed34467cc0f0b9b53/packaging-26.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/f7/a3/51e02ebc2a14974170d51e2410dfdab58870ea9bcd37cda15bd553d24dc4/pandas-3.0.0-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/b0/2d/a159ff23441ad2fc8081ea553a53804d3f1625bb6b1b7e1b4d2eb9371676/panel-1.8.5-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f2/f9/08b9a36815074e99ff3ded1ad1a20dca1dc9a7c116628b3c9808df451da4/panel-1.8.6-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/11/da/9d476e9aadfa854719f3cb917e3f7a170a657a182d8d1d6e546594a4872b/param-2.3.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/32/2b/121e912bd60eebd623f873fd090de0e84f322972ab25a7f9044c056804ed/pathspec-1.0.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/c3/059298687310d527a58bb01f3b1965787ee3b40dce76752eda8b44e9a2c5/pexpect-4.9.0-py2.py3-none-any.whl
@@ -246,7 +246,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/12/27/fb8d7338b4d551900fa3e580acbe7a0cf655d940e164cb5c00ec31961094/orderly_set-5.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b7/b9/c538f279a4e237a006a2c98387d081e9eb060d203d8ed34467cc0f0b9b53/packaging-26.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6f/fa/7f0ac4ca8877c57537aaff2a842f8760e630d8e824b730eb2e859ffe96ca/pandas-3.0.0-cp313-cp313-macosx_10_13_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/b0/2d/a159ff23441ad2fc8081ea553a53804d3f1625bb6b1b7e1b4d2eb9371676/panel-1.8.5-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f2/f9/08b9a36815074e99ff3ded1ad1a20dca1dc9a7c116628b3c9808df451da4/panel-1.8.6-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/11/da/9d476e9aadfa854719f3cb917e3f7a170a657a182d8d1d6e546594a4872b/param-2.3.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/32/2b/121e912bd60eebd623f873fd090de0e84f322972ab25a7f9044c056804ed/pathspec-1.0.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/c3/059298687310d527a58bb01f3b1965787ee3b40dce76752eda8b44e9a2c5/pexpect-4.9.0-py2.py3-none-any.whl
@@ -1565,8 +1565,8 @@ packages:
   requires_python: '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*'
 - pypi: ./
   name: nova-mvvm
-  version: 0.15.0
-  sha256: 5d05608440e40865e7c58e93067aa242f1c5029837545a8d4420f693d73d14d3
+  version: 0.15.1
+  sha256: 2465026d50835e407095f9cbd2e320371daf37b624d999d5b626e9fbba29498a
   requires_dist:
   - trame
   - deepdiff
@@ -1809,10 +1809,10 @@ packages:
   - xlsxwriter>=3.2.0 ; extra == 'all'
   - zstandard>=0.23.0 ; extra == 'all'
   requires_python: '>=3.11'
-- pypi: https://files.pythonhosted.org/packages/b0/2d/a159ff23441ad2fc8081ea553a53804d3f1625bb6b1b7e1b4d2eb9371676/panel-1.8.5-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/f2/f9/08b9a36815074e99ff3ded1ad1a20dca1dc9a7c116628b3c9808df451da4/panel-1.8.6-py3-none-any.whl
   name: panel
-  version: 1.8.5
-  sha256: b2baf010fcfac4c92eeffe71f469907b2f7fadcffdd36e42f87c541cbb48c3b3
+  version: 1.8.6
+  sha256: 658d7c6586787719ee12ebf359dbfdf4f9800b4792f296de6ca0af250d971b7a
   requires_dist:
   - bleach
   - bokeh>=3.7.0,<3.9.0

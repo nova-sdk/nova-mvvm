@@ -17,6 +17,7 @@ from .._internal.utils import (
     rget_list_of_fields,
     rgetattr,
     rsetattr,
+    rsetdictvalue,
 )
 from ..bindings_map import bindings_map
 from ..interface import (
@@ -178,11 +179,11 @@ class StateConnection:
     def _set_variable_in_state(self, name_in_state: str, value: Any) -> None:
         if is_async():
             with self.state:
-                self.state[name_in_state] = value
-                self.state.dirty(name_in_state)
+                rsetdictvalue(self.state, name_in_state, value)
+                self.state.dirty(name_in_state.split(".")[0])
         else:
-            self.state[name_in_state] = value
-            self.state.dirty(name_in_state)
+            rsetdictvalue(self.state, name_in_state, value)
+            self.state.dirty(name_in_state.split(".")[0])
 
     def _get_name_in_state(self, attribute_name: str) -> str:
         name_in_state = normalize_field_name(attribute_name)
@@ -206,6 +207,9 @@ class StateConnection:
         for attribute_name in self.linked_object_attributes or []:
             name_in_state = self._get_name_in_state(attribute_name)
             self.state.setdefault(name_in_state, None)
+
+        # Set the initial error state.
+        self._set_variable_in_state(f"{state_variable_name}.pydantic_errors", [])
 
         # this updates ViewModel on state change
         if self.viewmodel_linked_object:
@@ -234,6 +238,7 @@ class StateConnection:
                                 updated = False
                         except ValidationError as e:
                             errors = get_errored_fields_from_validation_error(e)
+                            self._set_variable_in_state(f"{state_variable_name}.pydantic_errors", errors)
                             error = e
                             updated = True
                             self.has_errors = True
@@ -248,6 +253,7 @@ class StateConnection:
                     if self.has_errors and not errors:
                         updated = True
                         self.has_errors = False
+                        self._set_variable_in_state(f"{state_variable_name}.pydantic_errors", [])
                     if updated:
                         await self._handle_callback({"updated": updates, "errored": errors, "error": error})
 
@@ -272,6 +278,7 @@ class TrameBinding(BindingInterface):
 
     def __init__(self, state: State) -> None:
         self._state = state
+        self._state["errors"] = {}
 
     @override
     def new_bind(

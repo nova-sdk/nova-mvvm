@@ -12,6 +12,8 @@ from ._internal.pydantic_utils import get_nested_pydantic_field
 
 logger = logging.getLogger(__name__)
 
+ERROR_FIELD_NAME = "pydantic_errors"
+
 
 def get_field_info(field_name: str) -> FieldInfo:
     """

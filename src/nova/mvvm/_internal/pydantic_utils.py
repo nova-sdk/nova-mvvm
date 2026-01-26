@@ -10,8 +10,6 @@ from pydantic.fields import FieldInfo
 
 logger = logging.getLogger(__name__)
 
-ERROR_FIELD_NAME = "pydantic_errors"
-
 
 def _format_field_name_from_tuple(input_tuple: Tuple) -> str:
     res = ""

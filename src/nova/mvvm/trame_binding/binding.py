@@ -9,7 +9,7 @@ from pydantic import BaseModel, ValidationError
 from trame_server.state import State
 from typing_extensions import override
 
-from .._internal.pydantic_utils import ERROR_FIELD_NAME, get_errored_fields_from_validation_error, get_updated_fields
+from .._internal.pydantic_utils import get_errored_fields_from_validation_error, get_updated_fields
 from .._internal.utils import (
     check_binding,
     check_model_type,
@@ -29,6 +29,7 @@ from ..interface import (
     LinkedObjectType,
     Worker,
 )
+from ..pydantic_utils import ERROR_FIELD_NAME
 from .trame_worker import TrameWorker
 
 

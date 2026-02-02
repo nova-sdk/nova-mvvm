@@ -168,6 +168,21 @@ async def test_binding_same_object(server: Server) -> None:
 
 
 @pytest.mark.asyncio
+async def test_binding_list_value(server: Server) -> None:
+    test_user = User()
+
+    binding = TrameBinding(server.state).new_bind(test_user)
+    binding.connect("test_user")
+
+    with server.state:
+        server.state.test_user["ranges"][0]["min_value"] = 2
+        server.state.dirty("test_user")
+        server.state.flush()
+    await asyncio.sleep(1)
+    assert server.state.test_user["pydantic_errors"] == ["ranges[0]"]
+
+
+@pytest.mark.asyncio
 async def test_binding_incorrect_value(server: Server) -> None:
     test_range = Range()
     test_user = User()

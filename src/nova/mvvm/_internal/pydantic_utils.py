@@ -75,10 +75,13 @@ def get_nested_pydantic_field(model: BaseModel, field_path: str) -> FieldInfo:
 
     for field in fields:
         if "[" in field:
+            original_model = current_model
             base = field.split("[")[0]
             current_model = getattr(current_model, base)
-            for _ in range(field.count("[")):
-                current_model = current_model[0]
+            for index in range(field.count("[")):
+                current_model = current_model[index]
+            if not issubclass(type(current_model), BaseModel):
+                return original_model.__class__.model_fields[base]
             continue
         if issubclass(type(getattr(current_model, field)), BaseModel):
             current_model = getattr(current_model, field)

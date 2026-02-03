@@ -5,6 +5,22 @@ from typing import Any, List, Optional
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
+class NestedList(BaseModel):
+    """A Pydantic model with a validation rule for a nested list."""
+
+    values: List[List[int]] = Field(default=[[0], [0], [0]], title="Set Less Than Zero For Error")
+
+    @field_validator("values", mode="after")
+    @classmethod
+    def validate_values(cls, values: List[List[int]]) -> List[List[int]]:
+        for inner_list in values:
+            for value in inner_list:
+                if value < 0:
+                    raise ValueError("Value must be >= 0")
+
+        return values
+
+
 class Range(BaseModel):
     """A Pydantic model for range with a model validation rule."""
 

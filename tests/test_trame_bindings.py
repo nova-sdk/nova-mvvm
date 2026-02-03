@@ -15,7 +15,7 @@ from nova.mvvm.pydantic_utils import ERROR_FIELD_NAME
 from nova.mvvm.trame_binding import TrameBinding
 from nova.mvvm.trame_binding.trame_worker import ProgressCallback
 
-from .model import Range, User
+from .model import NestedList, Range, User
 
 
 @pytest_asyncio.fixture(scope="function", autouse=True)  # Default scope
@@ -169,17 +169,17 @@ async def test_binding_same_object(server: Server) -> None:
 
 @pytest.mark.asyncio
 async def test_binding_list_value(server: Server) -> None:
-    test_user = User()
+    test_nested_list = NestedList()
 
-    binding = TrameBinding(server.state).new_bind(test_user)
-    binding.connect("test_user")
+    binding = TrameBinding(server.state).new_bind(test_nested_list)
+    binding.connect("test_nested_list")
 
     with server.state:
-        server.state.test_user["ranges"][0]["min_value"] = 2
-        server.state.dirty("test_user")
+        server.state.test_nested_list["values"][1][0] = -1
+        server.state.dirty("test_nested_list")
         server.state.flush()
     await asyncio.sleep(1)
-    assert server.state.test_user["pydantic_errors"] == ["ranges[0]"]
+    assert server.state.test_nested_list["pydantic_errors"] == ["values"]
 
 
 @pytest.mark.asyncio

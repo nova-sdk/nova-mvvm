@@ -85,6 +85,7 @@ def validate_pydantic_parameter(name: str, value: Any) -> str | bool:
     final_field = fields[-1]
     indices = []
     if "[" in final_field:
+        # If the final field is nested, then we need to parse the base field name and all indices in order to modify it.
         indices = re.findall(r"\[(\d+)\]", final_field)
         indices = [int(num) for num in indices]
         final_field = final_field.split("[")[0]
@@ -93,6 +94,7 @@ def validate_pydantic_parameter(name: str, value: Any) -> str | bool:
     model = current_model.copy(deep=True)
     # force set field value
     if indices:
+        # Now we use the base field name and indices to modify the nested field.
         target_field: List = getattr(model, final_field)
         for i in indices[:-1]:
             target_field = target_field[i]
